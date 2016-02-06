@@ -32,6 +32,8 @@ public class MouseTorque : MonoBehaviour
     /** Controls how strongly the camera tries to keep itself upright. */
     public float correctiveStrength = 0.1f;
 
+    public float damping = 100f;
+
     /** Toggles on / off mouselook. */
     bool freeLook = false;
 

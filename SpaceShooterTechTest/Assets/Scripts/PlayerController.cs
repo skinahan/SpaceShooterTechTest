@@ -233,7 +233,7 @@ public class PlayerController : MonoBehaviour {
         float x = Input.GetAxis("Jump") * verticalThrust * Time.deltaTime;
 
 
-        rb.AddForce(transform.forward * mainEngineThrust, ForceMode.Acceleration);
+        rb.AddForce((transform.forward * mainEngineThrust)/3, ForceMode.Acceleration);
         rb.AddForce(transform.right * h, ForceMode.Acceleration);
         rb.AddForce(transform.up * x, ForceMode.Acceleration);
         rb.AddTorque(-transform.forward * clockwise);
