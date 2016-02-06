@@ -6,7 +6,7 @@ public class BulletScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         rb = GetComponent<Rigidbody>();
-        rb.AddForce(transform.up * 10f, ForceMode.Impulse);
+        rb.AddForce(transform.up * 50f, ForceMode.Impulse);
 	}
 	
 	// Update is called once per frame

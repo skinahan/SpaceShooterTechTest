@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
@@ -10,17 +11,94 @@ public class PlayerController : MonoBehaviour {
     public float strafeThrust = 200f;
     public float rotateThrust = 200f;
     public bool inertiaDamping = false;
+
+    public Image forwardMovementImage;
+    public Image backwardMovementImage;
+    public Image leftMovementImage;
+    public Image rightMovementImage;
+
+    private Color startColor;
+
     private float spawnDistance = 3f;
     public Transform bullet;
 
+    private bool movingForward = false;
+    private bool movingRight = false;
+    private bool movingLeft = false;
+    private bool movingBackward = false;
+
     void Start()
     {
+        startColor = forwardMovementImage.color;
         rb = GetComponent<Rigidbody>();
     }
 	
     void FixedUpdate ()
     {
-        if(Input.GetButtonDown("inertiaDamp"))
+        float forwardVelocity = Vector3.Dot(rb.velocity, transform.forward);
+        float rightwardVelocity = Vector3.Dot(rb.velocity, transform.right);
+        Vector3 localangularvelocity = transform.InverseTransformDirection(rb.angularVelocity).normalized * rb.angularVelocity.magnitude;
+
+        if (forwardVelocity == 0)
+        {
+            movingForward = false;
+            movingBackward = false;
+        }
+
+        if(rightwardVelocity == 0)
+        {
+            movingRight = false;
+            movingLeft = false;
+        }
+
+        if (forwardVelocity > 1)
+        {
+            movingForward = true;
+        }
+        else
+        {
+            movingForward = false;
+        }
+
+        if(forwardVelocity < -1)
+        {
+            movingBackward = true;
+        }
+        else
+        {
+            movingBackward = false;
+        }
+
+        if(rightwardVelocity > 1)
+        {
+            movingRight = true;
+        }
+        else
+        {
+            movingRight = false;
+        }
+
+        if (rightwardVelocity < -1)
+        {            
+            movingLeft = true;
+        }
+        else
+        {
+            movingLeft = false;
+        }
+
+
+        if (inertiaDamping)
+        {
+            rb.drag = 0.5f;
+            rb.angularDrag = 1f;
+        }
+        else
+        {
+            rb.drag = 0.2f;
+            rb.angularDrag = 0.05f;
+        }
+        if (Input.GetButtonDown("inertiaDamp"))
 		{
             inertiaDamping = !inertiaDamping;
 		}
@@ -32,16 +110,42 @@ public class PlayerController : MonoBehaviour {
     }
 
 	// Update is called once per frame
-	void Update () {
+	void Update () {    
 
-        if(inertiaDamping)
+        if(movingForward)
         {
-            rb.drag = 0.5f;
-            rb.angularDrag = 2f;
-        } else
+            forwardMovementImage.color = startColor;
+        }
+        else
         {
-            rb.drag = 0f;
-            rb.angularDrag = 0.05f;
+            forwardMovementImage.color = Color.clear;
+        }
+
+        if(movingBackward)
+        {
+            backwardMovementImage.color = startColor;
+        }
+        else
+        {
+            backwardMovementImage.color = Color.clear;
+        }
+
+        if(movingLeft)
+        {
+            leftMovementImage.color = startColor;
+        }
+        else
+        {
+            leftMovementImage.color = Color.clear;
+        }
+
+        if (movingRight)
+        {
+            rightMovementImage.color = startColor;
+        }
+        else
+        {
+            rightMovementImage.color = Color.clear;
         }
 
         float h = Input.GetAxis("Horizontal") * strafeThrust * Time.deltaTime;

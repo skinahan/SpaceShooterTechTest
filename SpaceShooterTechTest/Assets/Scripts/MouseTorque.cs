@@ -24,19 +24,28 @@ using System.Collections;
 public class MouseTorque : MonoBehaviour
 {
     /** Controls how sensitive the horizontal axis is. */
-    public float horizontalSensitivity = 30f;
+    public float horizontalSensitivity = -10f;
 
     /** Controls how sensitive the vertical axis is. */
-    public float verticalSensitivity = 30f;
+    public float verticalSensitivity = -10f;
 
     /** Controls how strongly the camera tries to keep itself upright. */
-    public float correctiveStrength = 0f;
+    public float correctiveStrength = 0.1f;
+
+    /** Toggles on / off mouselook. */
+    bool freeLook = false;
 
     void FixedUpdate()
     {
-        GetComponent<Rigidbody>().AddTorque(0, Input.GetAxis("Mouse X") * horizontalSensitivity, 0);
-        GetComponent<Rigidbody>().AddRelativeTorque(Input.GetAxis("Mouse Y") * verticalSensitivity, 0, 0);
-        
+        if(Input.GetKeyDown("left alt"))
+        {
+            freeLook = !freeLook;
+        }
+        if (freeLook == false)
+        {
+            GetComponent<Rigidbody>().AddRelativeTorque(0, Input.GetAxis("Mouse X") * horizontalSensitivity, 0);
+            GetComponent<Rigidbody>().AddRelativeTorque(Input.GetAxis("Mouse Y") * verticalSensitivity, 0, 0);
+        }
         // Adding the two forces above creates some wobble that causes the camera to become
         // less than perfectly upright.  Set the corrective strength to zero to see what I'm
         // talking about.  The following lines help keep the camera upright.
